@@ -8,6 +8,7 @@ import StoryStudioModule from './modules/StoryStudioModule';
 import MarketingSolutionsModule from './modules/MarketingSolutionsModule';
 import SalesModule from './modules/SalesModule';
 import DirectSalesModule from './modules/DirectSalesModule';
+import FashionAiModule from './modules/FashionAiModule';
 import VideoAnalysisModule from './modules/VideoAnalysisModule';
 import UserGuideModule from './modules/UserGuideModule';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -26,7 +27,7 @@ function cn(...inputs: ClassValue[]) {
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'guide' | 'film-prompt' | 'sales-prompt' | 'marketing'>(() => loadState('activeTab', 'guide' as const));
   const [filmSubTab, setFilmSubTab] = useState<'single' | 'series' | 'story' | 'analysis'>(() => loadState('filmSubTab', 'single' as const));
-  const [salesSubTab, setSalesSubTab] = useState<'sales' | 'direct-sales'>(() => loadState('salesSubTab', 'sales' as const));
+  const [salesSubTab, setSalesSubTab] = useState<'sales' | 'direct-sales' | 'fashion-ai'>(() => loadState('salesSubTab', 'sales' as const));
   const [session, setSession] = useState<AuthSession | null>(() => getAuthSession());
   const [isApiKeyOpen, setIsApiKeyOpen] = useState(false);
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
@@ -227,7 +228,7 @@ const App: React.FC = () => {
                 if (['single', 'series', 'story'].includes(tab)) {
                   setActiveTab('film-prompt');
                   setFilmSubTab(tab as any);
-                } else if (['sales', 'direct-sales'].includes(tab)) {
+                } else if (['sales', 'direct-sales', 'fashion-ai'].includes(tab)) {
                   setActiveTab('sales-prompt');
                   setSalesSubTab(tab as any);
                 } else {
@@ -284,6 +285,7 @@ const App: React.FC = () => {
                     {[
                       { id: 'sales', label: 'Bán Hàng', icon: Zap },
                       { id: 'direct-sales', label: 'Bán hàng trực tiếp', icon: Video },
+                      { id: 'fashion-ai', label: 'AI THỜI TRANG', icon: Sparkles },
                     ].map((sub) => (
                       <button
                         key={sub.id}
@@ -304,8 +306,10 @@ const App: React.FC = () => {
                 
                 {salesSubTab === 'sales' ? (
                   <SalesModule />
-                ) : (
+                ) : salesSubTab === 'direct-sales' ? (
                   <DirectSalesModule />
+                ) : (
+                  <FashionAiModule />
                 )}
               </div>
             ) : null}
